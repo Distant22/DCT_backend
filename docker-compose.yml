@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_USER=dct_user
+      - MYSQL_PASSWORD=dct_secret
+      - MYSQL_DATABASE=DCT
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d  
+
+  fastapi:
+    container_name: main
+    build: .
+    ports:
+      - '8000:8000'
+    depends_on:
+      - mysql
